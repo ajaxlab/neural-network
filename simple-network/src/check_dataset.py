@@ -4,6 +4,7 @@ This demonstrates image data and it's label for sample.csv
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import mod.util as util
 
 
 def main():
@@ -23,7 +24,8 @@ def main():
         if index >= max_index:
             plt.close()
         ret = images[index]
-        print('label: ', labels[index])
+        label = labels[index]
+        print('label: ', label, util.get_output_vector(label, 10))
         return ret
 
     im = plt.imshow(get_pixels(0), cmap='Greys',
