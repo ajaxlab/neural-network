@@ -4,7 +4,7 @@ This demonstrates image data and it's label for sample.csv
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import mod.util as util
+import pkg.util as util
 
 
 def main():

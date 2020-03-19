@@ -1,4 +1,7 @@
 import numpy as np
+import logging
+
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
 
 
 def get_output_vector(label, nodes):
