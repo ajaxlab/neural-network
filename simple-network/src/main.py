@@ -11,19 +11,22 @@ def main():
 
     nn = net.NeuralNet(layer1, layer2, layer3, learning_rate)
 
-    with open('dataset/mnist_train_100.csv') as file:
-        for line in file:
-            tokens = line.strip().split(',')
-            pixels = (np.asfarray(tokens[1:]) / 255.0 * 0.99) + 0.01
-            label = util.get_output_vector(tokens[0], layer3)
-            nn.train(pixels, label)
+    util.for_each_record('dataset/mnist_train.csv', (
+        lambda label, pixels:
+        nn.train(pixels, util.get_output_vector(label, layer3))
+    ))
 
-    with open('dataset/mnist_test_10.csv') as file:
-        for line in file:
-            tokens = line.strip().split(',')
-            pixels = (np.asfarray(tokens[1:]) / 255.0 * 0.99) + 0.01
-            result = nn.query(pixels)
-            print(tokens[0], np.argmax(result))
+    nn.save_model()
+
+    score = []
+
+    util.for_each_record('dataset/mnist_test.csv', (
+        lambda label, pixels:
+        score.append(label == np.argmax(nn.query(pixels)))
+    ))
+
+    score = np.asfarray(score)
+    print('\nScore =', score.sum() / score.size)
 
 
 if __name__ == '__main__':
