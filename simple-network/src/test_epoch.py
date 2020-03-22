@@ -4,6 +4,9 @@ import numpy as np
 
 
 def main():
+
+    print('Test with Epoch 1~20')
+
     layer1 = 28 * 28
     layer2 = 100
     layer3 = 10
@@ -11,15 +14,15 @@ def main():
 
     nn = net.NeuralNet(layer1, layer2, layer3, learning_rate)
 
-    for i in range(1, 21):
-        nn.train('dataset/mnist_train_100.csv', i)
+    for i in range(1, 21, 2):
+        nn.train('dataset/mnist_train.csv', i)
         score = []
         util.for_each_record('dataset/mnist_test.csv', (
             lambda label, pixels:
             score.append(label == np.argmax(nn.query(pixels)))
         ))
         score = np.asfarray(score)
-        print(i, '\t', score.sum() / score.size)
+        print(str(i) + '\t' + str(score.sum() / score.size))
 
 
 if __name__ == '__main__':
