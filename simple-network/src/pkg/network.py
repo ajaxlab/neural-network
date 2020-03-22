@@ -2,6 +2,7 @@ import json
 import logging
 import numpy as np
 import scipy.special
+from . import util
 
 
 class NeuralNet:
@@ -20,9 +21,19 @@ class NeuralNet:
 
         self.activation = lambda x: scipy.special.expit(x)
 
-    def train(self, input, real_data):
-        self.record += 1
-        logging.info(self.record)
+    def train(self, data_path, epoch=1):
+        num_3 = self.num_3
+        train_record = self.train_record
+        get_output_vector = util.get_output_vector
+        for n in range(epoch):
+            util.for_each_record(data_path, (
+                lambda label, pixels:
+                train_record(pixels, get_output_vector(label, num_3))
+            ))
+
+    def train_record(self, input, real_data):
+        # self.record += 1
+        # logging.info(self.record)
         # logging.info([self.record, "train", len(input), real_data])
 
         real = np.array(real_data, ndmin=2).T

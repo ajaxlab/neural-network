@@ -7,15 +7,10 @@ def main():
     layer1 = 28 * 28
     layer2 = 100
     layer3 = 10
-    learning_rate = 0.3
+    learning_rate = 0.1
 
     nn = net.NeuralNet(layer1, layer2, layer3, learning_rate)
-
-    util.for_each_record('dataset/mnist_train.csv', (
-        lambda label, pixels:
-        nn.train(pixels, util.get_output_vector(label, layer3))
-    ))
-
+    nn.train('dataset/mnist_train_100.csv')
     nn.save_model()
 
     score = []
