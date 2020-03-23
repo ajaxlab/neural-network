@@ -20,6 +20,7 @@ class NeuralNet:
             0.0, pow(num_3, -0.5), (num_3, num_2))  # (10, 100)
 
         self.activation = lambda x: scipy.special.expit(x)
+        self.reverse_activation = lambda x: scipy.special.logit(x)
 
     def train(self, data_path, epoch=1):
         num_3 = self.num_3
@@ -31,15 +32,15 @@ class NeuralNet:
                 train_record(pixels, get_output_vector(label, num_3))
             ))
 
-    def train_record(self, input, real_data):
+    def train_record(self, input, target):
         # self.record += 1
         # logging.info(self.record)
-        # logging.info([self.record, "train", len(input), real_data])
+        # logging.info([self.record, "train", len(input), target])
 
-        real = np.array(real_data, ndmin=2).T
+        real = np.array(target, ndmin=2).T
         out_1, out_2, out_3 = self._get_output(input)
         # dW23 = dW23' - dW23 = a x E3 x O3 (1 - O3) * O2T
-        # E3 = REAL_DATA - O3
+        # E3 = TARGET - O3
         err_3 = real - out_3
         self.w_23 += self.learn_rate * np.dot(
             (err_3 * out_3 * (1 - out_3)),
@@ -65,6 +66,14 @@ class NeuralNet:
         self.w_12 = np.load('model/w_12.npy')
         self.w_23 = np.load('model/w_23.npy')
 
+    def inverse(self, output):
+        out_3 = np.array(output, ndmin=2).T
+        sum_3 = self.reverse_activation(out_3)
+        out_2 = self._normalize(np.dot(self.w_23.T, sum_3))
+        sum_2 = self.reverse_activation(out_2)
+        out_1 = self._normalize(np.dot(self.w_12.T, sum_2))
+        return out_1
+
     def _get_output(self, input):
         out_1 = np.array(input, ndmin=2).T  # (748, 1)
 
@@ -75,3 +84,11 @@ class NeuralNet:
         out_3 = self.activation(sum_3)  # (10, 1)
 
         return out_1, out_2, out_3
+
+    def _normalize(self, matrix):
+        # Normalizes to 0.01 ~ 0.99
+        matrix -= np.min(matrix)
+        matrix /= np.max(matrix)
+        matrix *= 0.98
+        matrix += 0.01
+        return matrix
