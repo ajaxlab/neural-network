@@ -5,7 +5,7 @@ import numpy as np
 
 def main():
 
-    print('Test with Epoch 1~20')
+    print('Test with Epoch 1~10')
 
     layer1 = 28 * 28
     layer2 = 100
@@ -14,7 +14,7 @@ def main():
 
     nn = net.NeuralNet(layer1, layer2, layer3, learning_rate)
 
-    for i in range(1, 21, 2):
+    for i in range(1, 11):
         nn.train('dataset/mnist_train.csv', i)
         score = []
         util.for_each_record('dataset/mnist_test.csv', (

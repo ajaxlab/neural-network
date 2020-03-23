@@ -8,7 +8,7 @@ def main():
     print('Save trained model')
 
     layer1 = 28 * 28
-    layer2 = 100
+    layer2 = 200
     layer3 = 10
     learning_rate = 0.1
 
